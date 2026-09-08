@@ -1,0 +1,90 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Survos\Etsy\Generated\Model;
+
+/**
+ * Generated from the Etsy Open API v3 OpenAPI contract. Do not edit.
+ *
+ * Etsy declares these REQUIRED when creating or updating: type, upgrade_name, price, secondary_price.
+ * They are still nullable here -- a response model has to survive a field
+ * Etsy stops sending -- so the requirement is documented, not enforced by the
+ * constructor. Validate before sending, not after parsing.
+ */
+final readonly class CreateShopShippingProfileUpgradeRequest
+{
+    /**
+     * @param int|null $type The type of the shipping upgrade. Domestic (0) or international (1). One of: 0, 1.
+     * @param string|null $upgrade_name Name for the shipping upgrade shown to shoppers at checkout, e.g. USPS Priority.
+     * @param float|null $price Additional cost of adding the shipping upgrade.
+     * @param float|null $secondary_price Additional cost of adding the shipping upgrade for each additional item.
+     * @param int|null $shipping_carrier_id The unique ID of a supported shipping carrier, which is used to calculate an Estimated Delivery Date. **Required with `mail_class`** if `min_delivery_days` and `max_delivery_days` are null.
+     * @param string|null $mail_class The unique ID string of a shipping carrier's mail class, which is used to calculate an estimated delivery date. **Required with `shipping_carrier_id`** if `min_delivery_days` and `max_delivery_days` are null.
+     * @param int|null $min_delivery_days The minimum number of business days a buyer can expect to wait to receive their purchased item once it has shipped. **Required with `max_delivery_days`** if `mail_class` is null.
+     * @param int|null $max_delivery_days The maximum number of business days a buyer can expect to wait to receive their purchased item once it has shipped. **Required with `min_delivery_days`** if `mail_class` is null.
+     */
+    public function __construct(
+        public ?int $type = null,
+        public ?string $upgrade_name = null,
+        public ?float $price = null,
+        public ?float $secondary_price = null,
+        public ?int $shipping_carrier_id = null,
+        public ?string $mail_class = null,
+        public ?int $min_delivery_days = null,
+        public ?int $max_delivery_days = null,
+    ) {
+    }
+
+    /** @param array<string, mixed> $data */
+    public static function fromArray(array $data): self
+    {
+        return new self(
+            type: isset($data['type']) ? (int) $data['type'] : null,
+            upgrade_name: isset($data['upgrade_name']) ? (string) $data['upgrade_name'] : null,
+            price: isset($data['price']) ? (float) $data['price'] : null,
+            secondary_price: isset($data['secondary_price']) ? (float) $data['secondary_price'] : null,
+            shipping_carrier_id: isset($data['shipping_carrier_id']) ? (int) $data['shipping_carrier_id'] : null,
+            mail_class: isset($data['mail_class']) ? (string) $data['mail_class'] : null,
+            min_delivery_days: isset($data['min_delivery_days']) ? (int) $data['min_delivery_days'] : null,
+            max_delivery_days: isset($data['max_delivery_days']) ? (int) $data['max_delivery_days'] : null,
+        );
+    }
+
+    /**
+     * Null properties are omitted: eBay rejects some explicit nulls and reads
+     * others as "clear this field", so emitting them is never harmless.
+     *
+     * @return array<string, mixed>
+     */
+    public function toArray(): array
+    {
+        $data = [];
+        if ($this->type !== null) {
+            $data['type'] = $this->type;
+        }
+        if ($this->upgrade_name !== null) {
+            $data['upgrade_name'] = $this->upgrade_name;
+        }
+        if ($this->price !== null) {
+            $data['price'] = $this->price;
+        }
+        if ($this->secondary_price !== null) {
+            $data['secondary_price'] = $this->secondary_price;
+        }
+        if ($this->shipping_carrier_id !== null) {
+            $data['shipping_carrier_id'] = $this->shipping_carrier_id;
+        }
+        if ($this->mail_class !== null) {
+            $data['mail_class'] = $this->mail_class;
+        }
+        if ($this->min_delivery_days !== null) {
+            $data['min_delivery_days'] = $this->min_delivery_days;
+        }
+        if ($this->max_delivery_days !== null) {
+            $data['max_delivery_days'] = $this->max_delivery_days;
+        }
+
+        return $data;
+    }
+}

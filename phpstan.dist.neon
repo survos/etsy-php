@@ -1,0 +1,8 @@
+parameters:
+    level: 8
+    paths:
+        - src
+        - tests
+    excludePaths:
+        # Generated from Etsy's contract; fix the generator, not the output.
+        - src/Generated

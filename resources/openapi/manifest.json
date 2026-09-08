@@ -1,0 +1,15 @@
+{
+    "contracts": {
+        "etsy.openapi": {
+            "file": "etsy_openapi_v3_oas3.json",
+            "url": "https://www.etsy.com/openapi/generated/oas/3.0.0.json",
+            "title": "Etsy Open API v3",
+            "version": "3.0.0",
+            "paths": 76,
+            "schemas": 81,
+            "sha256": "f5d37fde5d7104a5ebcefbb83b26e08e184127de9c646af8656c10c3496b9db7",
+            "why": "The whole Etsy Open API v3: listings, shops, taxonomy, inventory, receipts.",
+            "fetchedAt": "2026-09-08T18:52:02+00:00"
+        }
+    }
+}
