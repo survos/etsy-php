@@ -150,8 +150,16 @@ final readonly class EtsyTransport implements EtsyTransportInterface
     }
 
     /**
-     * Etsy expects scalars, and JSON for anything structured (tags, materials and
-     * the inventory payload all arrive as JSON strings inside a form body).
+     * Etsy expects scalars, and takes structured values two different ways in a form
+     * body -- which is not documented anywhere and is only visible from its errors.
+     *
+     * A plain list of scalars (tags, materials, styles, image_ids) must be
+     * COMMA-SEPARATED. JSON-encoding one is rejected with
+     * `{"path":"/tags","type":"invalid_characters"}`, because the brackets and
+     * quotes are themselves the invalid characters -- an error that reads like the
+     * tags are bad when the encoding is.
+     *
+     * Anything nested (the inventory `products` payload) really is JSON.
      *
      * @param array<string, mixed> $body
      *
@@ -165,11 +173,32 @@ final readonly class EtsyTransport implements EtsyTransportInterface
                 $flat[$key] = $value ? 'true' : 'false';
             } elseif (is_scalar($value)) {
                 $flat[$key] = $value;
+            } elseif (self::isScalarList($value)) {
+                $flat[$key] = implode(',', array_map(
+                    static fn (mixed $v): string => is_bool($v) ? ($v ? 'true' : 'false') : (string) $v,
+                    $value,
+                ));
             } else {
                 $flat[$key] = json_encode($value, JSON_THROW_ON_ERROR | JSON_UNESCAPED_SLASHES);
             }
         }
 
         return $flat;
+    }
+
+    /** @phpstan-assert-if-true list<scalar> $value */
+    private static function isScalarList(mixed $value): bool
+    {
+        if (!is_array($value) || !array_is_list($value) || [] === $value) {
+            return false;
+        }
+
+        foreach ($value as $item) {
+            if (!is_scalar($item)) {
+                return false;
+            }
+        }
+
+        return true;
     }
 }
