@@ -31,4 +31,24 @@ interface EtsyTransportInterface
         array $headers = [],
         string $encoding = 'json',
     ): array;
+
+    /**
+     * Upload a file as multipart/form-data.
+     *
+     * Separate from request() because Etsy's image endpoint takes actual BYTES --
+     * it does not fetch a URL the way eBay and Mercado Libre do. Anything that
+     * wants a picture on a listing has to read it first.
+     *
+     * @param resource|string       $contents stream or raw bytes
+     * @param array<string, scalar> $fields   other form fields sent alongside
+     *
+     * @return array<string, mixed>
+     */
+    public function upload(
+        string $path,
+        string $fieldName,
+        mixed $contents,
+        string $filename,
+        array $fields = [],
+    ): array;
 }

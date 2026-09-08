@@ -100,6 +100,55 @@ final readonly class EtsyTransport implements EtsyTransportInterface
         return $payload;
     }
 
+    public function upload(
+        string $path,
+        string $fieldName,
+        mixed $contents,
+        string $filename,
+        array $fields = [],
+    ): array {
+        $headers = [
+            'Accept' => 'application/json',
+            'x-api-key' => $this->credentials->keystring,
+        ];
+
+        if (null !== $this->tokenProvider) {
+            $headers['Authorization'] = 'Bearer ' . $this->tokenProvider->accessToken();
+        }
+
+        if (is_string($contents)) {
+            $stream = fopen('php://temp', 'r+');
+            if (false === $stream) {
+                throw new \RuntimeException('Could not open a temp stream for the upload.');
+            }
+            fwrite($stream, $contents);
+            rewind($stream);
+            $contents = $stream;
+        }
+
+        // Symfony's HttpClient encodes an array body containing a resource as
+        // multipart/form-data and sets the boundary itself, so Content-Type is
+        // deliberately NOT set here -- setting it would omit the boundary.
+        $response = $this->httpClient->request('POST', self::API_HOST . $path, [
+            'headers' => $headers,
+            'body' => [...$fields, $fieldName => $contents],
+        ]);
+
+        $status = $response->getStatusCode();
+        $raw = $response->getContent(throw: false);
+        $payload = json_decode($raw, true);
+
+        if (!is_array($payload)) {
+            throw new EtsyApiException($status, null, $raw);
+        }
+        if ($status >= 400) {
+            /** @var array<string, mixed> $payload */
+            throw EtsyApiException::fromPayload($status, $payload, $raw);
+        }
+
+        return $payload;
+    }
+
     /**
      * Etsy expects scalars, and JSON for anything structured (tags, materials and
      * the inventory payload all arrive as JSON strings inside a form body).
