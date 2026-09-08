@@ -47,7 +47,7 @@ final readonly class EtsyTransport implements EtsyTransportInterface
             'headers' => [
                 'Accept' => 'application/json',
                 // Required on every call, alongside any bearer token.
-                'x-api-key' => $this->credentials->keystring,
+                'x-api-key' => $this->credentials->apiKeyHeader(),
                 ...$headers,
             ],
         ];
@@ -109,7 +109,7 @@ final readonly class EtsyTransport implements EtsyTransportInterface
     ): array {
         $headers = [
             'Accept' => 'application/json',
-            'x-api-key' => $this->credentials->keystring,
+            'x-api-key' => $this->credentials->apiKeyHeader(),
         ];
 
         if (null !== $this->tokenProvider) {
